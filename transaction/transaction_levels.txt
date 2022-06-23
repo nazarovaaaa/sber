@@ -1,0 +1,21 @@
+SHOW default_transaction_isolation;
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+BEGIN TRANSACTION;
+UPDATE Summer_Practice.Users
+set Credit=0
+where User_Id=10;
+select *
+from Summer_Practice.Users;
+COMMIT TRANSACTION;
+ROLLBACK;
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+BEGIN TRANSACTION;
+UPDATE Summer_Practice.Users
+set Credit=0
+where User_Id=10;
+select *
+from Summer_Practice.Users;
+COMMIT TRANSACTION;
+ROLLBACK;
+SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
+COMMIT;
