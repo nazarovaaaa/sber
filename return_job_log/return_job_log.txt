@@ -1,0 +1,18 @@
+create or replace function return_job_log(text,varchar(10))
+returns table (date timestamp with time zone,status character(1),message text) as $$
+declare
+	crs cursor for select jobnextrun date,case when jstonerror='f' then 't'
+										else 'f' end status, jobdesc message
+					from pgagent.pga_job inner join pgagent.pga_jobstep 
+					on (pgagent.pga_job.jobid=pgagent.pga_jobstep.jstjobid)
+					where jobname=$1and substring(cast (jobnextrun as varchar(20)),1,10)=$2;
+	tmp record;
+begin
+	for tmp in crs loop
+		date=tmp.date;
+		status=tmp.status;
+		message=tmp.message;
+		return next;
+	end loop;
+end;$$
+language 'plpgsql' volatile;
